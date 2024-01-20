@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <title>Vue.jsのサンプル</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://unpkg.com/vue@3.0.0/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios@0.23.0/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1 class="bg-secondary text-white display-4 px-3">Vue3</h1>
+    <div id="app" class="container" >
+    <p>{{ message }}</p>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>氏名</th>
+                <th>メール</th>
+                <th>電話</th>
+            </tr>
+        </thead>
+        <tr v-for="item in items" key:="items">
+            <td>{{ item.name }}</td>
+            <td>{{ item.mail }}</td>
+            <td>{{ item.tel  }}</td>
+        </tr>
+        
+    </table>
+</div>
+    <script>
+        const appdata = {
+            data(){
+                return{
+                    message:'※データをテーブル表示する',
+                    items:[],
+                };
+            },
+            mounted(){
+                //パックエンドのエンドポイントを適切なもに変更すること
+                const backendpoint = 'http://localhost:30099/notes_from_b';
+
+                //AXIOSを使用してデータを取得
+                axios.get(backendpoint)
+                .then((res) => {
+                    this.items = res.data;
+                    console.log(this.items)
+                })
+                .catch(error => {
+                    console.error('データの取得に失敗しました。', error);
+                });
+            }
+        }
+        Vue.createApp(appdata).mount('#app');
+    </script>
+</body>
+</html>
